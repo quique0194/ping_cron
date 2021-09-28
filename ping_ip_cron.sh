@@ -20,6 +20,9 @@ WIFI_SSID=$(iwgetid $CURR_INTERFACE -r)
 CURR_IS_METERED=$(nmcli -t -f GENERAL.METERED dev show $CURR_INTERFACE | grep -o "yes")
 
 
+# DO NOT RUN IF NO NETWORK
+[[ -z "$CURR_INTERFACE" ]] && echo "No network connected, aborting" && exit 0
+
 # DO NOT RUN ON METERED CONNECTIONS
 [[ ! -z "$CURR_IS_METERED" ]] && echo "Metered connection, aborting" && exit 0
 
