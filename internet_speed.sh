@@ -18,7 +18,8 @@ CURR_IS_METERED=$(nmcli -t -f GENERAL.METERED dev show $CURR_INTERFACE | grep -o
 # GET CSV VARS
 SPEED_TEST_RES=$(speedtest-cli --simple 2>/dev/null)
 
-DT=$(date '+%Y-%m-%dT%H:%M:%S')
+DATE=$(date '+%Y-%m-%d')
+TIME=$(date '+%H:%M:%S')
 DL=$(echo $SPEED_TEST_RES | awk '{print $5}')
 UL=$(echo $SPEED_TEST_RES | awk '{print $8}')
 PING=$(echo $SPEED_TEST_RES | awk '{print $2}')
@@ -27,15 +28,15 @@ PING=$(echo $SPEED_TEST_RES | awk '{print $2}')
 
 
 # GENERATE CSV
-NEW_ROW="$DT,$PING,$DL,$UL"
+NEW_ROW="$DATE,$TIME,$PING,$DL,$UL"
 
-LOG_FILE="$HOME/logs/internet_test_${CURR_INTERFACE}_${WIFI_SSID}.csv"
+LOG_FILE="$HOME/logs/${CURR_INTERFACE}_${WIFI_SSID}_speedtest-cli.csv"
 mkdir -p $(dirname $LOG_FILE)
 touch $LOG_FILE
 echo $NEW_ROW  >> $LOG_FILE
 
 # Add header if needed
-HEADER="TIME,PING,DOWNLOAD,UPLOAD"
+HEADER="DATE,TIME,PING,DOWNLOAD,UPLOAD"
 if [ ! $(head -n 1 $LOG_FILE) == $HEADER ]; then
   sed -i "1i$HEADER" $LOG_FILE
 fi
